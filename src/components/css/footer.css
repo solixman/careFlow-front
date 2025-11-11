@@ -1,7 +1,7 @@
 /* src/components/common/Footer.css */
 
 .footer {
-  background-color: #f1f4f7;
+  border-top: 2px solid #c3c0c0;
   color: #333;
   padding: 2rem 1.5rem 1rem;
   font-family: sans-serif;

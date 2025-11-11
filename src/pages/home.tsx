@@ -1,16 +1,18 @@
 import React from "react";
-import Header from "../components/layout/comon/header";
-import Footer from "../components/layout/comon/footer";
+import Header from "../components/layout/header";
+import Footer from "../components/layout/footer";
 import "../index.css"
-import Hero from "../components/layout/comon/hero";
+import Hero from "../components/hero";
+import About from "../components/about";
 const Home: React.FC = () => {
   return (
     <div>
       <Header />
+
       <main>
         <Hero />
+        <About/>
       </main>
-
       <Footer />
     </div>
   );

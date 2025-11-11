@@ -1,0 +1,88 @@
+.about {
+  padding: 80px 20px;
+  color: #1c1c1c;
+}
+
+.about-container {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  max-width: 1200px;
+  margin: auto;
+  flex-wrap: wrap;
+  gap: 40px;
+}
+
+.about-text {
+  margin-top: 10vh;
+  flex: 1;
+  min-width: 300px;
+}
+
+.about-title {
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin-bottom: 20px;
+  color: #00c6ff;
+}
+
+.about-description {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  margin-bottom: 30px;
+}
+
+.about-subtitle {
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+
+.about-features,
+.about-roles {
+  list-style: none;
+  padding: 0;
+}
+
+.about-features li,
+.about-roles li {
+  margin-bottom: 10px;
+  font-size: 1rem;
+}
+
+.about-image {
+  flex: 1;
+  min-width: 300px;
+  display: flex;
+  justify-content: center;
+}
+
+.about-image img {
+  width: 100%;
+  max-width: 450px;
+  border-radius: 10px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* 📱 Responsive */
+@media (max-width: 900px) {
+  .about-container {
+    flex-direction: column-reverse;
+    text-align: center;
+  }
+
+  .about-text {
+    text-align: center;
+  }
+
+  .about-title {
+    font-size: 1.8rem;
+  }
+
+  .about-description,
+  .about-features li,
+  .about-roles li {
+    font-size: 1rem;
+  }
+}
