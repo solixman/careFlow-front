@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import * as React from "react";
 import "./css/contactForm.css";
 
 const ContactForm: React.FC = () => {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = React.useState({
     name: "",
     email: "",
     message: "",

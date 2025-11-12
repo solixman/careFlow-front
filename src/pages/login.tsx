@@ -1,5 +1,5 @@
-import type React from "react";
-
+import * as React from "react";
+import Button from "../components/common/button";
 
 
 const Login: React.FC=()=>{
@@ -7,7 +7,7 @@ const Login: React.FC=()=>{
     return (
       <body>
         <main>
-             this is login
+            <Button label="Soulayman"/>
         </main>
       </body>  
     ) 
