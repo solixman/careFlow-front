@@ -3,7 +3,7 @@ import "./css/about.css";
 
 const About: React.FC = () => {
   return (
-    <section className="about">
+    <section id="about" className="about">
       <div className="about-container">
 
         <div className="about-text">

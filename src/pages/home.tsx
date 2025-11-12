@@ -4,16 +4,18 @@ import Footer from "../components/layout/footer";
 import "../index.css"
 import Hero from "../components/hero";
 import About from "../components/about";
+import Features from "../components/features";
 const Home: React.FC = () => {
   return (
     <div>
-      <Header />
+      <Header/>
 
       <main>
-        <Hero />
+        <Hero/>
         <About/>
+        <Features/>
       </main>
-      <Footer />
+      <Footer/>
     </div>
   );
 };
