@@ -7,7 +7,7 @@ const Hero: React.FC = () => {
   const navigate = useNavigate();
 
   return (
-    <section className="hero">
+    <section id="" className="hero">
       <video className="hero-video" autoPlay loop muted playsInline>
         <source src={BackVideo} type="video/mp4" />
       </video>

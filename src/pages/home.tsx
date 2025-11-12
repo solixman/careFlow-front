@@ -5,6 +5,7 @@ import "../index.css"
 import Hero from "../components/hero";
 import About from "../components/about";
 import Features from "../components/features";
+import Contacts from "../components/contacts";
 const Home: React.FC = () => {
   return (
     <div>
@@ -14,6 +15,7 @@ const Home: React.FC = () => {
         <Hero/>
         <About/>
         <Features/>
+        <Contacts/>
       </main>
       <Footer/>
     </div>

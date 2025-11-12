@@ -1,8 +1,9 @@
 /* src/components/common/Footer.css */
 
 .footer {
+  background-color: #333;
   border-top: 2px solid #c3c0c0;
-  color: #333;
+  color: #ffffff;
   padding: 2rem 1.5rem 1rem;
   font-family: sans-serif;
 }
@@ -22,21 +23,21 @@
 }
 
 .footer-logo {
-  color: #0066cc;
+  color: #fcfcfc;
   font-weight: 700;
   margin-bottom: 0.5rem;
 }
 
 .footer-text {
   font-size: 0.9rem;
-  color: #555;
+  color: #ffffff;
   line-height: 1.5;
 }
 
 .footer-section h4 {
   margin-bottom: 0.8rem;
   font-size: 1rem;
-  color: #0066cc;
+  color: #f8f8f8;
 }
 
 .footer-section ul {
@@ -50,7 +51,7 @@
 }
 
 .footer-section a {
-  color: #333;
+  color: #ffffff;
   text-decoration: none;
   transition: color 0.2s;
 }
@@ -61,7 +62,7 @@
 
 /* Bottom bar */
 .footer-bottom {
-  border-top: 1px solid #ddd;
+  border-top: 1px solid #414142;
   margin-top: 2rem;
   padding-top: 1rem;
   display: flex;
@@ -69,7 +70,7 @@
   flex-wrap: wrap;
   align-items: center;
   font-size: 0.85rem;
-  color: #555;
+  color: #aaa9a9;
 }
 
 .footer-links {
@@ -79,7 +80,7 @@
 
 .footer-links a {
   text-decoration: none;
-  color: #555;
+  color: #aaa9a9;
 }
 
 .footer-links a:hover {

@@ -1,4 +1,3 @@
-// src/components/common/Footer.tsx
 import React from "react";
 import { Link } from "react-router-dom";
 import "../css/footer.css";
@@ -7,7 +6,7 @@ const Footer: React.FC = () => {
   return (
     <footer className="footer">
       <div className="footer-container">
-        {/* Logo & Description */}
+      
         <div className="footer-section">
           <h2 className="footer-logo">CareFlow</h2>
           <p className="footer-text">
@@ -16,7 +15,7 @@ const Footer: React.FC = () => {
           </p>
         </div>
 
-        {/* Navigation Links */}
+
         <div className="footer-section">
           <h4>Navigation</h4>
           <ul>
@@ -27,7 +26,7 @@ const Footer: React.FC = () => {
           </ul>
         </div>
 
-        {/* Contact Info */}
+        
         <div className="footer-section">
           <h4>Contact</h4>
           <ul>
@@ -38,7 +37,7 @@ const Footer: React.FC = () => {
         </div>
       </div>
 
-      {/* Bottom bar */}
+      
       <div className="footer-bottom">
         <p>© {new Date().getFullYear()} CareFlow. Tous droits réservés.</p>
         <div className="footer-links">
