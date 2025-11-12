@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import "./css/hero.css";
-import BackVideo from "../assets/videos/vecteezy_global-network-medical-healthcare-system-protection-concept_4747818.mp4";
+import BackVideo from "../../assets/videos/vecteezy_global-network-medical-healthcare-system-protection-concept_4747818.mp4";
 
 const Hero: React.FC = () => {
   const navigate = useNavigate();
