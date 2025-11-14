@@ -1,6 +1,6 @@
 import { Routes, Route } from 'react-router-dom'
-import Home from './pages/home'
-import Login from './pages/login'
+import Home from './pages/HomePage'
+import Login from './pages/LoginPage'
 
 function App() {
   return (
