@@ -3,7 +3,15 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { Label } from "../ui/label";
 
-const LoginForm: React.FC = () => {
+interface UserProps {
+  id: string, name:string, email: string, role: string,status:string
+}
+
+interface LoginFormProps {
+  onLogin: (user: UserProps, token: string) => void;
+}
+
+function LoginForm({ onLogin }: LoginFormProps) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -60,7 +68,8 @@ const LoginForm: React.FC = () => {
         return;
       }
 
-      // if (typeof onLogin === "function") onLogin(user, token);
+      if (typeof onLogin === "function") onLogin(user, token);
+
     } catch (err) {
       console.error("Login error", err);
       setError(`An unexpected error occurred. Please try again`);

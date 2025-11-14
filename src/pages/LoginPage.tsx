@@ -1,58 +1,45 @@
-// import React, { useState, createContext, useContext } from "react";import AuthLayout from "../components/layout/AuthLayout";
+import React, { useState } from "react";
 import AuthLayout from "@/components/layout/AuthLayout";
 import LoginForm from "../components/forms/LoginForm";
-// import { useNavigate } from "react-router-dom";
-import React from "react";
+import { useNavigate } from "react-router-dom";
 
-// const AuthContext = createContext({});
-// export function useAuth() {
-// return useContext(AuthContext);
-// }
 
+interface UserProps {
+  id: string, name:string, email: string, role: string,status:string
+}
 
 const LoginPage: React.FC = () => {
-// const [user, setUser] = useState({});
-// const [token, setToken] = useState('null');
+  const [user, setUser] = useState<UserProps | null >(null);
+  const [token, setToken] = useState<string | null>(null);
+  console.log(user)
+  console.log(token)
 
-// const navigate = useNavigate();
+  const navigate = useNavigate();
 
+  const onLogin = (loggedUser: UserProps, accessToken: string) => {
+  
+  localStorage.setItem("token", accessToken);
 
-// function onLogin(loggedUser, accessToken:string) {
+    setUser(loggedUser);
+    setToken(accessToken);
 
-// localStorage.setItem("token", accessToken);
-
-
-// setUser(loggedUser);
-// setToken(accessToken);
-
-
-// // Redirect the user
-// navigate("/dashboard");
-// }
+    navigate("/dashboard");
+  };
 
   return (
     <AuthLayout>
       <div className="flex h-screen">
-        {/* <div className="relative flex-1">
-      <video
-        src={BackVideo}
-        autoPlay
-        loop
-        muted
-        className="w-full h-full object-cover"
-      />
-      <div className="absolute inset-0 bg-black/40"></div>
-    </div> */}
-
         <div className="flex-1 flex items-center justify-center p-8">
           <div className="w-full max-w-md p-10 rounded-lg shadow-lg backdrop-blur-md bg-background/80">
             <h1 className="text-3xl font-bold mb-6 text-foreground text-center">
-              Welcome Back 
+              Welcome Back
             </h1>
+
             <p className="text-sm mb-6 text-muted-foreground text-center">
               Sign in to your account to continue
             </p>
-            <LoginForm/>
+
+            <LoginForm onLogin={onLogin} />
           </div>
         </div>
       </div>
