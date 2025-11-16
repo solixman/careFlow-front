@@ -28,15 +28,8 @@ const RegisterPage: React.FC = () => {
   return (
     <AuthLayout>
       <div className="register-wrapper">
-        {/* Left Video Section */}
         <div className="register-left">
-          <video
-            className="register-video"
-            src="/videos/medical-bg.mp4"
-            autoPlay
-            loop
-            muted
-          />
+        
           <div className="register-overlay">
             <div className="welcome-text">
               <h1>Join CareFlow!</h1>
@@ -45,7 +38,6 @@ const RegisterPage: React.FC = () => {
           </div>
         </div>
 
-        {/* Right Form Section */}
         <div className="register-right">
           <div className="register-card">
             <h2>Create Account</h2>

@@ -52,7 +52,8 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onRegister }) => {
       });
 
       const data = await res.json();
-      if (!res.ok) return setError(data?.message || "Registration failed.");
+      if (!res.ok) return setError(data?.error || "Registration failed.");
+      console.log(error);
       if (!data?.token || !data?.user)
         return setError("Server response did not include token or user.");
 
@@ -72,7 +73,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onRegister }) => {
         <input
           id="name"
           type="text"
-          placeholder="John Doe"
+          placeholder="solixman"
           value={name}
           onChange={(e) => setName(e.target.value)}
         />
@@ -83,7 +84,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onRegister }) => {
         <input
           id="email"
           type="email"
-          placeholder="you@example.com"
+          placeholder="solixman@Careflow.com"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
