@@ -2,8 +2,8 @@ import { Routes, Route } from "react-router-dom";
 import Home from "./pages/HomePage";
 import Login from "./pages/LoginPage";
 import Register from "./pages/RegisterPage";
-import DashboardRoutes from "./components/context/Dashboardroutes";
 import OnlyAuth from "./components/context/OnlyAuth";
+import DashboardLayout from "./components/layout/dashboardLayout";
 
 function App() {
   return (
@@ -15,7 +15,7 @@ function App() {
         path="/dashboard"
         element={
             <OnlyAuth>
-              <DashboardRoutes />
+              <DashboardLayout />
             </OnlyAuth>
         }
         />

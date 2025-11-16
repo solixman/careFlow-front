@@ -1,7 +1,5 @@
 import React, { useState } from "react";
-import { Input } from "../ui/input";
-import { Button } from "../ui/button";
-import { Label } from "../ui/label";
+import "../css/register.css";
 
 interface UserProps {
   id: string;
@@ -20,11 +18,8 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onRegister }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [password2, setPassword2] = useState("");
-
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
-
-  console.log(isLoading)
 
   function validate() {
     if (!name.trim()) return "Name is required.";
@@ -38,12 +33,8 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onRegister }) => {
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setError("");
-
     const validationError = validate();
-    if (validationError) {
-      setError(validationError);
-      return;
-    }
+    if (validationError) return setError(validationError);
 
     try {
       setIsLoading(true);
@@ -60,27 +51,12 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onRegister }) => {
         body: JSON.stringify(payload),
       });
 
-      console.log("Status:", res.status);
-      const raw = await res.clone().text();
-      console.log("Raw response:", raw);
-
       const data = await res.json();
+      if (!res.ok) return setError(data?.message || "Registration failed.");
+      if (!data?.token || !data?.user)
+        return setError("Server response did not include token or user.");
 
-      if (!res.ok) {
-        setError(data?.message || "Registration failed. Try again.");
-        return;
-      }
-
-      const token = data?.token;
-      const user = data?.user;
-
-      if (!token || !user) {
-        setError("Server response did not include token or user.");
-        return;
-      }
-
-      onRegister(user, token);
-
+      onRegister(data.user, data.token);
     } catch (err) {
       console.error("Register error:", err);
       setError("An unexpected error occurred.");
@@ -90,11 +66,10 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onRegister }) => {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-6 w-full max-w-md">
-      {/* Name */}
-      <div className="flex flex-col gap-1">
-        <Label htmlFor="name">Full Name</Label>
-        <Input
+    <form onSubmit={handleSubmit} className="register-form">
+      <div className="form-group">
+        <label htmlFor="name">Full Name</label>
+        <input
           id="name"
           type="text"
           placeholder="John Doe"
@@ -103,10 +78,9 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onRegister }) => {
         />
       </div>
 
-      {/* Email */}
-      <div className="flex flex-col gap-1">
-        <Label htmlFor="email">Email</Label>
-        <Input
+      <div className="form-group">
+        <label htmlFor="email">Email</label>
+        <input
           id="email"
           type="email"
           placeholder="you@example.com"
@@ -115,10 +89,9 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onRegister }) => {
         />
       </div>
 
-      {/* Password */}
-      <div className="flex flex-col gap-1">
-        <Label htmlFor="password">Password</Label>
-        <Input
+      <div className="form-group">
+        <label htmlFor="password">Password</label>
+        <input
           id="password"
           type="password"
           placeholder="••••••••"
@@ -127,10 +100,9 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onRegister }) => {
         />
       </div>
 
-      {/* Confirm Password */}
-      <div className="flex flex-col gap-1">
-        <Label htmlFor="password2">Confirm Password</Label>
-        <Input
+      <div className="form-group">
+        <label htmlFor="password2">Confirm Password</label>
+        <input
           id="password2"
           type="password"
           placeholder="••••••••"
@@ -139,13 +111,11 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onRegister }) => {
         />
       </div>
 
-      <Button type="submit" className="w-full">
-        Create Account
-      </Button>
+      {error && <p className="error-text">{error}</p>}
 
-      {error && (
-        <p className="text-red-500 text-sm text-center">{error}</p>
-      )}
+      <button type="submit" disabled={isLoading}>
+        {isLoading ? "Creating..." : "Create Account"}
+      </button>
     </form>
   );
 };

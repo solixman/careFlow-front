@@ -2,9 +2,14 @@ import React, { useState } from "react";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { Label } from "../ui/label";
+import "../css/login.css"; // reuse the same CSS
 
 interface UserProps {
-  id: string, name:string, email: string, role: string,status:string
+  id: string;
+  name: string;
+  email: string;
+  role: string;
+  status: string;
 }
 
 interface LoginFormProps {
@@ -17,68 +22,45 @@ function LoginForm({ onLogin }: LoginFormProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
 
-  console.log(isLoading);
-
   function validate() {
     if (!email.trim()) return "Email is required.";
     if (!password) return "Password is required.";
     return "";
   }
 
-  async function handelSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setError("");
-
     const validationError = validate();
-    if (validationError) {
-      setError(validationError);
-      return;
-    }
+    if (validationError) return setError(validationError);
 
     try {
       setIsLoading(true);
-      const payload = { email: email.trim(), password: password };
-      const res = await fetch(`http://localhost:3333/auth/login`, {
+      const payload = { email: email.trim(), password };
+      const res = await fetch("http://localhost:3333/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
-        credentials:"include"
-      })
+        credentials: "include",
+      });
 
       const data = await res.json();
+      if (!res.ok) return setError(data?.message || "Login failed");
+      if (!data?.token || !data?.user)
+        return setError("Server response did not include token or user.");
 
-      if (!res.ok) {
-        const err =
-          data?.message ||
-          `something went wrong, please try again or contact the support`;
-        setError(err);
-      }
-
-      const token = data?.token;
-      const user = data?.user;
-
-      if (!token || !user) {
-        setError("Server response did not include token or user.");
-        return;
-      }
-
-      if (typeof onLogin === "function") onLogin(user, token);
-
+      onLogin(data.user, data.token);
     } catch (err) {
       console.error("Login error", err);
-      setError(`An unexpected error occurred. Please try again`);
-      console.log(error)
+      setError("Unexpected error. Please try again.");
     } finally {
       setIsLoading(false);
     }
   }
 
   return (
-    <form
-      onSubmit={handelSubmit}
-      className="flex flex-col gap-6 w-full max-w-md"
-    >
-      <div className="flex flex-col gap-1">
+    <form onSubmit={handleSubmit} className="login-form">
+      <div className="form-group">
         <Label htmlFor="email">Email</Label>
         <Input
           id="email"
@@ -89,7 +71,7 @@ function LoginForm({ onLogin }: LoginFormProps) {
         />
       </div>
 
-      <div className="flex flex-col gap-1">
+      <div className="form-group">
         <Label htmlFor="password">Password</Label>
         <Input
           id="password"
@@ -100,11 +82,13 @@ function LoginForm({ onLogin }: LoginFormProps) {
         />
       </div>
 
-      <Button type="submit" className="w-full">
-        Log In
+      {error && <p className="error-text">{error}</p>}
+
+      <Button type="submit" disabled={isLoading} className="login-btn">
+        {isLoading ? "Logging in..." : "Log In"}
       </Button>
     </form>
   );
-};
+}
 
 export default LoginForm;

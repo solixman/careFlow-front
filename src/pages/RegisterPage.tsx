@@ -1,52 +1,65 @@
-import RegisterForm from "@/components/forms/RegisterForm";
-import AuthLayout from "@/components/layout/AuthLayout";
-import React, { useState } from "react"
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import AuthLayout from "@/components/layout/AuthLayout";
+import RegisterForm from "@/components/forms/RegisterForm";
+import "../components/css/register.css"; 
 
 interface UserProps {
-  id: string, name:string, email: string, role: string,status:string
+  id: string;
+  name: string;
+  email: string;
+  role: string;
+  status: string;
 }
 
-
-export default function Register(){
-
-     const [user, setUser] = useState<UserProps | null >(null);
+const RegisterPage: React.FC = () => {
+  const [user, setUser] = useState<UserProps | null>(null);
   const [token, setToken] = useState<string | null>(null);
-  console.log(user)
-  console.log(token)
-
+  console.log(user,token) 
   const navigate = useNavigate();
 
   const onRegister = (loggedUser: UserProps, accessToken: string) => {
-  
-  localStorage.setItem("token", accessToken);
-
+    localStorage.setItem("token", accessToken);
     setUser(loggedUser);
     setToken(accessToken);
-
     navigate("/dashboard");
   };
 
+  return (
+    <AuthLayout>
+      <div className="register-wrapper">
+        {/* Left Video Section */}
+        <div className="register-left">
+          <video
+            className="register-video"
+            src="/videos/medical-bg.mp4"
+            autoPlay
+            loop
+            muted
+          />
+          <div className="register-overlay">
+            <div className="welcome-text">
+              <h1>Join CareFlow!</h1>
+              <p>Create your account to access all features.</p>
+            </div>
+          </div>
+        </div>
 
-    return (
-        <>
-        <AuthLayout>
-         <div className="flex h-screen">
-        <div className="flex-1 flex items-center justify-center p-8">
-          <div className="w-full max-w-md p-10 rounded-lg shadow-lg backdrop-blur-md bg-background/80">
-            <h1 className="text-3xl font-bold mb-6 text-foreground text-center">
-              Welcome Back
-            </h1>
-
-            <p className="text-sm mb-6 text-muted-foreground text-center">
-              Sign in to your account to continue
-            </p>
-
+        {/* Right Form Section */}
+        <div className="register-right">
+          <div className="register-card">
+            <h2>Create Account</h2>
             <RegisterForm onRegister={onRegister} />
+            <div className="register-footer">
+              <p>
+                Already have an account? <a href="/login">Sign in</a>
+              </p>
+            </div>
           </div>
         </div>
       </div>
-        </AuthLayout >
-        </>
-    )
-}
+    </AuthLayout>
+  );
+};
+
+export default RegisterPage;
