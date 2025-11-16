@@ -1,27 +1,26 @@
-import React, { useState } from "react";
+import React, { useContext } from "react";
 import AuthLayout from "@/components/layout/AuthLayout";
 import LoginForm from "../components/forms/LoginForm";
 import { useNavigate } from "react-router-dom";
-
+import { AuthContext } from "@/components/context/AuthContext";
 
 interface UserProps {
-  id: string, name:string, email: string, role: string,status:string
+  id: string;
+  name: string;
+  email: string;
+  role: string;
+  status: string;
 }
 
 const LoginPage: React.FC = () => {
-  const [user, setUser] = useState<UserProps | null >(null);
-  const [token, setToken] = useState<string | null>(null);
-  console.log(user)
-  console.log(token)
-
+  const auth = useContext(AuthContext);
   const navigate = useNavigate();
 
   const onLogin = (loggedUser: UserProps, accessToken: string) => {
-  
-  localStorage.setItem("token", accessToken);
+    auth?.setUser(loggedUser);
+    auth?.setToken(accessToken);
 
-    setUser(loggedUser);
-    setToken(accessToken);
+    localStorage.setItem("token", accessToken);
 
     navigate("/dashboard");
   };

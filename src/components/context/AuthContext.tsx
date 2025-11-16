@@ -5,7 +5,7 @@ export interface UserProps {
 }
 
 interface AuthContextType {
-  user: UserProps | null;
+  user: UserProps | null ;
   token: string | null;
   setUser: (user: UserProps) => void;
   setToken: (token: string | null) => void;

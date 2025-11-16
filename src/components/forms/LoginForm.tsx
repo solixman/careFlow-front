@@ -18,7 +18,6 @@ function LoginForm({ onLogin }: LoginFormProps) {
   const [error, setError] = useState("");
 
   console.log(isLoading);
-  console.log(error);
 
   function validate() {
     if (!email.trim()) return "Email is required.";
@@ -39,20 +38,15 @@ function LoginForm({ onLogin }: LoginFormProps) {
     try {
       setIsLoading(true);
       const payload = { email: email.trim(), password: password };
-      // console.log(payload);
       const res = await fetch(`http://localhost:3333/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
-      });
-
-      console.log("Status:", res.status);
-      const text = await res.clone().text();
-      console.log("Raw response:", text);
+        credentials:"include"
+      })
 
       const data = await res.json();
 
-      console.log(data);
       if (!res.ok) {
         const err =
           data?.message ||

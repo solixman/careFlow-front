@@ -5,7 +5,7 @@ import { AuthContext } from "@/components/context/AuthContext";
 
 const OnlyAuth: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const auth = useContext(AuthContext);
-
+ console.log(auth?.user)
   if (!auth?.token) {
     return <Navigate to="/login" replace />;
   }

@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { UserProps ,AuthContext } from "./AuthContext";
 
 const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<UserProps | null >(null);
+    const auth = useContext(AuthContext);
+  const [user, setUser] = useState<UserProps | null >(auth?.user);
   const [token, setToken] = useState<string | null>(localStorage.getItem("token"));
 
   return (
