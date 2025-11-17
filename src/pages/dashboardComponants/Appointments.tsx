@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
-import "@/pages/dashboardComponants/Appointments";
+import React, { useState, useEffect, useContext } from "react";
+import { AuthContext } from "@/components/context/AuthContext"; // Adjust path if needed
+import "@/components/css/dashboard.css";
 
 interface Appointment {
   _id: string;
@@ -32,6 +33,7 @@ interface Filters {
 }
 
 const Appointments: React.FC = () => {
+  const auth = useContext(AuthContext);
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -52,6 +54,15 @@ const Appointments: React.FC = () => {
     notes: "",
     doctor: "",
     isUrgent: false,
+  });
+  const [createModalOpen, setCreateModalOpen] = useState<boolean>(false);
+  const [createForm, setCreateForm] = useState({
+    date: "",
+    doctorId: "",
+    purpose: "",
+    note: "",
+    isUrgent: false,
+    userId: "", // For non-patients
   });
   const [actionLoading, setActionLoading] = useState<string | null>(null); // For button loading
   const limit = 10;
@@ -210,6 +221,52 @@ const Appointments: React.FC = () => {
     }
   };
 
+  const handleCreate = async () => {
+    // Basic validation
+    if (!createForm.date || !createForm.doctorId || !createForm.purpose) {
+      alert("Please fill in all required fields: date, doctor ID, and purpose.");
+      return;
+    }
+    if (auth?.user?.role !== "patient" && !createForm.userId) {
+      alert("User ID is required for non-patients.");
+      return;
+    }
+
+    setActionLoading("create");
+    try {
+      const token = localStorage.getItem("token");
+      const payload = {
+        date: createForm.date,
+        doctorId: createForm.doctorId,
+        purpose: createForm.purpose,
+        note: createForm.note,
+        isUrgent: createForm.isUrgent,
+        ...(auth?.user?.role !== "patient" && { userId: createForm.userId }),
+      };
+      const response = await fetch(`http://localhost:3333/appoitment/create`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          ...(token && { Authorization: `Bearer ${token}` }),
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to create appointment");
+      }
+
+      alert("Appointment created successfully!");
+      setCreateModalOpen(false);
+      setCreateForm({ date: "", doctorId: "", purpose: "", note: "", isUrgent: false, userId: "" });
+      fetchAppointments(skip, filters); // Refresh
+    } catch (err) {
+      alert("Error creating appointment: " + (err instanceof Error ? err.message : "Unknown error"));
+    } finally {
+      setActionLoading(null);
+    }
+  };
+
   if (loading) {
     return (
       <div className="appointments-container">
@@ -237,67 +294,74 @@ const Appointments: React.FC = () => {
     <div className="appointments-container">
       <h3>Appointments</h3>
       
-      {/* Filter Section */}
+      {/* Create Appointment Button */}
       <div style={{ marginBottom: "20px" }}>
-        <button onClick={() => setShowFilters(!showFilters)} style={{ padding: "8px 16px", background: "oklch(0.6 0.118 184.704)", color: "white", border: "none", borderRadius: "4px", marginBottom: "10px" }}>
-          {showFilters ? "Hide Filters" : "Show Filters"}
+        <button onClick={() => setCreateModalOpen(true)} style={{ padding: "8px 16px", background: "oklch(0.6 0.118 184.704)", color: "white", border: "none", borderRadius: "4px" }}>
+          Create Appointment
         </button>
-        {showFilters && (
-          <div style={{ padding: "16px", background: "#f9f9f9", borderRadius: "8px", border: "1px solid #e0e0e0" }}>
-            <div style={{ display: "flex", flexWrap: "wrap", gap: "12px", alignItems: "center" }}>
-              <input
-                type="text"
-                name="doctorId"
-                placeholder="Doctor ID"
-                value={filters.doctorId}
-                onChange={handleFilterChange}
-                style={{ padding: "8px", border: "1px solid #ccc", borderRadius: "4px", flex: "1 1 150px" }}
-              />
-              <select
-                name="status"
-                value={filters.status}
-                onChange={handleFilterChange}
-                style={{ padding: "8px", border: "1px solid #ccc", borderRadius: "4px", flex: "1 1 150px" }}
-              >
-                <option value="">All Statuses</option>
-                <option value="scheduled">Scheduled</option>
-                <option value="cancelled">Cancelled</option>
-                <option value="completed">Completed</option>
-              </select>
-              <label style={{ display: "flex", alignItems: "center", gap: "4px" }}>
-                <input
-                  type="checkbox"
-                  name="isUrgent"
-                  checked={filters.isUrgent === "true"}
-                  onChange={handleFilterChange}
-                />
-                Urgent Only
-              </label>
-              <input
-                type="date"
-                name="date"
-                value={filters.date}
-                onChange={handleFilterChange}
-                style={{ padding: "8px", border: "1px solid #ccc", borderRadius: "4px", flex: "1 1 150px" }}
-              />
-              <input
-                type="text"
-                name="PatientName"
-                placeholder="Patient Name"
-                value={filters.PatientName}
-                onChange={handleFilterChange}
-                style={{ padding: "8px", border: "1px solid #ccc", borderRadius: "4px", flex: "1 1 150px" }}
-              />
-              <button onClick={handleApplyFilters} style={{ padding: "8px 16px", background: "oklch(0.6 0.118 184.704)", color: "white", border: "none", borderRadius: "4px" }}>
-                Apply Filters
-              </button>
-              <button onClick={handleClearFilters} style={{ padding: "8px 16px", background: "#ccc", color: "black", border: "none", borderRadius: "4px" }}>
-                Clear Filters
-              </button>
-            </div>
-          </div>
-        )}
       </div>
+      
+      {/* Filter Section */}
+<div style={{ marginBottom: "20px" }}>
+  <button onClick={() => setShowFilters(!showFilters)} style={{ padding: "8px 16px", background: "oklch(0.6 0.118 184.704)", color: "white", border: "none", borderRadius: "4px", marginBottom: "10px" }}>
+    {showFilters ? "Hide Filters" : "Show Filters"}
+  </button>
+  {showFilters && (
+    <div style={{ padding: "16px", background: "#f9f9f9", borderRadius: "8px", border: "1px solid #e0e0e0" }}>
+      <div style={{ display: "flex", flexWrap: "wrap", gap: "12px", alignItems: "center" }}>
+        <input
+          type="text"
+          name="doctorId"
+          placeholder="Doctor ID"
+          value={filters.doctorId}
+          onChange={handleFilterChange}
+          style={{ padding: "8px", border: "1px solid #ccc", borderRadius: "4px", flex: "1 1 150px" }}
+        />
+        <select
+          name="status"
+          value={filters.status}
+          onChange={handleFilterChange}
+          style={{ padding: "8px", border: "1px solid #ccc", borderRadius: "4px", flex: "1 1 150px" }}
+        >
+          <option value="">All Statuses</option>
+          <option value="scheduled">Scheduled</option>
+          <option value="cancelled">Cancelled</option>
+          <option value="completed">Completed</option>
+        </select>
+        <label style={{ display: "flex", alignItems: "center", gap: "4px" }}>
+          <input
+            type="checkbox"
+            name="isUrgent"
+            checked={filters.isUrgent === "true"}
+            onChange={handleFilterChange}
+          />
+          Urgent Only
+        </label>
+        <input
+          type="datetime-local"  // Changed to datetime-local
+          name="date"
+          value={filters.date}
+          onChange={handleFilterChange}
+          style={{ padding: "8px", border: "1px solid #ccc", borderRadius: "4px", flex: "1 1 150px" }}
+        />
+        <input
+          type="text"
+          name="PatientName"
+          placeholder="Patient Name"
+          value={filters.PatientName}
+          onChange={handleFilterChange}
+          style={{ padding: "8px", border: "1px solid #ccc", borderRadius: "4px", flex: "1 1 150px" }}
+        />
+        <button onClick={handleApplyFilters} style={{ padding: "8px 16px", background: "oklch(0.6 0.118 184.704)", color: "white", border: "none", borderRadius: "4px" }}>
+          Apply Filters
+        </button>
+        <button onClick={handleClearFilters} style={{ padding: "8px 16px", background: "#ccc", color: "black", border: "none", borderRadius: "4px" }}>
+          Clear Filters
+        </button>
+      </div>
+    </div>
+  )}
+</div>
 
       {appointments.length === 0 ? (
         <p>No appointments found.</p>
@@ -327,7 +391,7 @@ const Appointments: React.FC = () => {
                   <td style={{ padding: "12px", maxWidth: "200px", overflow: "hidden", textOverflow: "ellipsis" }}>{appt.notes}</td>
                   <td style={{ padding: "12px" }}>{appt.isUrgent ? "Yes" : "No"}</td>
                   <td style={{ padding: "12px" }}>
-                    <button
+                                        <button
                       onClick={() => handleModify(appt)}
                       disabled={actionLoading === appt._id}
                       style={{ padding: "6px 12px", background: "oklch(0.6 0.118 184.704)", color: "white", border: "none", borderRadius: "4px", marginRight: "8px", cursor: actionLoading === appt._id ? "not-allowed" : "pointer" }}
@@ -359,51 +423,120 @@ const Appointments: React.FC = () => {
       )}
 
       {/* Modal for Editing */}
-      {modalOpen && editingAppointment && (
+{modalOpen && editingAppointment && (
+  <div style={{ position: "fixed", top: 0, left: 0, width: "100vw", height: "100vh", background: "rgba(0,0,0,0.5)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 9999 }}>
+    <div style={{ background: "white", padding: "20px", borderRadius: "8px", width: "400px", maxWidth: "90%" }}>
+      <h4>Edit Appointment</h4>
+      <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+        <input
+          type="datetime-local"  // Changed to datetime-local
+          value={editForm.date}
+          onChange={(e) => setEditForm({ ...editForm, date: e.target.value })}
+          style={{ padding: "8px", border: "1px solid #ccc", borderRadius: "4px" }}
+        />
+        <textarea
+          placeholder="Notes"
+          value={editForm.notes}
+          onChange={(e) => setEditForm({ ...editForm, notes: e.target.value })}
+          style={{ padding: "8px", border: "1px solid #ccc", borderRadius: "4px", minHeight: "80px" }}
+        />
+        <input
+          type="text"
+          placeholder="Doctor ID"
+          value={editForm.doctor}
+          onChange={(e) => setEditForm({ ...editForm, doctor: e.target.value })}
+          style={{ padding: "8px", border: "1px solid #ccc", borderRadius: "4px" }}
+        />
+        <label style={{ display: "flex", alignItems: "center", gap: "4px" }}>
+          <input
+            type="checkbox"
+            checked={editForm.isUrgent}
+            onChange={(e) => setEditForm({ ...editForm, isUrgent: e.target.checked })}
+          />
+          Urgent
+        </label>
+        <div style={{ display: "flex", gap: "8px", justifyContent: "flex-end" }}>
+          <button
+            onClick={() => setModalOpen(false)}
+            style={{ padding: "8px 16px", background: "#ccc", color: "black", border: "none", borderRadius: "4px" }}
+          >
+            Cancel
+          </button>
+          <button
+            onClick={handleUpdate}
+            disabled={actionLoading === editingAppointment._id}
+            style={{ padding: "8px 16px", background: "oklch(0.6 0.118 184.704)", color: "white", border: "none", borderRadius: "4px", cursor: actionLoading === editingAppointment._id ? "not-allowed" : "pointer" }}
+          >
+            {actionLoading === editingAppointment._id ? "Saving..." : "Save"}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+)}  
+
+      {/* Modal for Creating */}
+      {createModalOpen && (
         <div style={{ position: "fixed", top: 0, left: 0, width: "100%", height: "100%", background: "rgba(0,0,0,0.5)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000 }}>
           <div style={{ background: "white", padding: "20px", borderRadius: "8px", width: "400px", maxWidth: "90%" }}>
-            <h4>Edit Appointment</h4>
+            <h4>Create Appointment</h4>
             <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
               <input
-                type="date"
-                value={editForm.date}
-                onChange={(e) => setEditForm({ ...editForm, date: e.target.value })}
+                type="datetime-local"
+                value={createForm.date}
+                onChange={(e) => setCreateForm({ ...createForm, date: e.target.value })}
                 style={{ padding: "8px", border: "1px solid #ccc", borderRadius: "4px" }}
-              />
-              <textarea 
-                placeholder="Notes"
-                value={editForm.notes}
-                onChange={(e) => setEditForm({ ...editForm, notes: e.target.value })}
-                style={{ padding: "8px", border: "1px solid #ccc", borderRadius: "4px", minHeight: "80px" }}
               />
               <input
                 type="text"
                 placeholder="Doctor ID"
-                value={editForm.doctor}
-                onChange={(e) => setEditForm({ ...editForm, doctor: e.target.value })}
+                value={createForm.doctorId}
+                onChange={(e) => setCreateForm({ ...createForm, doctorId: e.target.value })}
                 style={{ padding: "8px", border: "1px solid #ccc", borderRadius: "4px" }}
+              />
+              <input
+                type="text"
+                placeholder="Purpose"
+                value={createForm.purpose}
+                onChange={(e) => setCreateForm({ ...createForm, purpose: e.target.value })}
+                style={{ padding: "8px", border: "1px solid #ccc", borderRadius: "4px" }}
+              />
+              <textarea
+                placeholder="Note"
+                value={createForm.note}
+                onChange={(e) => setCreateForm({ ...createForm, note: e.target.value })}
+                style={{ padding: "8px", border: "1px solid #ccc", borderRadius: "4px", minHeight: "80px" }}
               />
               <label style={{ display: "flex", alignItems: "center", gap: "4px" }}>
                 <input
                   type="checkbox"
-                  checked={editForm.isUrgent}
-                  onChange={(e) => setEditForm({ ...editForm, isUrgent: e.target.checked })}
+                  checked={createForm.isUrgent}
+                  onChange={(e) => setCreateForm({ ...createForm, isUrgent: e.target.checked })}
                 />
                 Urgent
               </label>
+              {auth?.user?.role !== "patient" && (
+                <input
+                  type="text"
+                  placeholder="User ID"
+                  value={createForm.userId}
+                  onChange={(e) => setCreateForm({ ...createForm, userId: e.target.value })}
+                  style={{ padding: "8px", border: "1px solid #ccc", borderRadius: "4px" }}
+                />
+              )}
               <div style={{ display: "flex", gap: "8px", justifyContent: "flex-end" }}>
                 <button
-                  onClick={() => setModalOpen(false)}
+                  onClick={() => setCreateModalOpen(false)}
                   style={{ padding: "8px 16px", background: "#ccc", color: "black", border: "none", borderRadius: "4px" }}
                 >
                   Cancel
                 </button>
                 <button
-                  onClick={handleUpdate}
-                  disabled={actionLoading === editingAppointment._id}
-                  style={{ padding: "8px 16px", background: "oklch(0.6 0.118 184.704)", color: "white", border: "none", borderRadius: "4px", cursor: actionLoading === editingAppointment._id ? "not-allowed" : "pointer" }}
+                  onClick={handleCreate}
+                  disabled={actionLoading === "create"}
+                  style={{ padding: "8px 16px", background: "oklch(0.6 0.118 184.704)", color: "white", border: "none", borderRadius: "4px", cursor: actionLoading === "create" ? "not-allowed" : "pointer" }}
                 >
-                  {actionLoading === editingAppointment._id ? "Saving..." : "Save"}
+                  {actionLoading === "create" ? "Creating..." : "Create"}
                 </button>
               </div>
             </div>
