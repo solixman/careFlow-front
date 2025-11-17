@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import AuthLayout from "@/components/layout/AuthLayout";
 import RegisterForm from "@/components/forms/RegisterForm";
 import "../components/css/register.css"; 
+import { AuthContext } from "@/components/context/AuthContext";
 
 interface UserProps {
   id: string;
@@ -13,17 +14,15 @@ interface UserProps {
 }
 
 const RegisterPage: React.FC = () => {
-  const [user, setUser] = useState<UserProps | null>(null);
-  const [token, setToken] = useState<string | null>(null);
-  console.log(user,token) 
-  const navigate = useNavigate();
-
-  const onRegister = (loggedUser: UserProps, accessToken: string) => {
-    localStorage.setItem("token", accessToken);
-    setUser(loggedUser);
-    setToken(accessToken);
-    navigate("/dashboard");
-  };
+  const auth = useContext(AuthContext);
+   const navigate = useNavigate();
+ 
+   const onRegister = (loggedUser: UserProps, accessToken: string) => {
+     auth?.setUser(loggedUser);
+     auth?.setToken(accessToken);
+     localStorage.setItem("token", accessToken);
+     navigate("/dashboard");
+   };
 
   return (
     <AuthLayout>

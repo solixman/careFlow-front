@@ -1,0 +1,356 @@
+/* =====================
+   FABULOUS DASHBOARD LAYOUT
+   ===================== */
+
+/* Overall wrapper */
+.dashboard-wrapper {
+  display: flex;
+  height: 100vh;
+  font-family: "Inter", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #f0f4f8, #d9e2ec); /* Light medical blue gradient */
+  overflow: hidden;
+  transition: background 0.3s ease;
+}
+/* ---------------------
+   Sidebar
+   --------------------- */
+.sidebar {
+  width: 260px;
+  background: #ffffff;
+  box-shadow: 4px 0 20px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  transition: width 0.3s ease;
+  border-right: 1px solid #e0e0e0;
+}
+
+.sidebar-logo {
+  padding: 20px;
+  font-weight: 700;
+  font-size: 1.5rem;
+  border-bottom: 1px solid #e0e0e0;
+  text-align: center;
+  color: oklch(0.6 0.118 184.704); /* --chart-2 for primary blue */
+  letter-spacing: 1px;
+  background: linear-gradient(90deg, oklch(0.6 0.118 184.704), oklch(0.398 0.07 227.392)); /* --chart-2 to --chart-3 */
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.sidebar-nav {
+  flex: 1;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.sidebar-link {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 12px 16px;
+  border-radius: 8px;
+  text-decoration: none;
+  color: #333; /* Dark text for readability */
+  font-weight: 500;
+  position: relative;
+  transition: all 0.3s ease;
+  border-left: 4px solid transparent;
+  background: #f5f5f5; /* Subtle gray background */
+  cursor: pointer;
+  border: 1px solid #e0e0e0; /* Light border for definition */
+}
+
+.sidebar-link:hover {
+  background: oklch(0.6 0.118 184.704); /* Primary blue */
+  color: #ffffff; /* White text */
+  transform: translateX(3px);
+  border-left-color: oklch(0.6 0.118 184.704);
+  box-shadow: 0 4px 12px oklch(0.6 0.118 184.704 / 0.3);
+}
+
+.sidebar-link.active {
+  background: oklch(0.6 0.118 184.704); /* Primary blue */
+  color: #ffffff;
+  font-weight: 600;
+  border-left-color: #ffffff;
+  box-shadow: 0 2px 8px oklch(0.6 0.118 184.704 / 0.3);
+}
+
+.sidebar-link.active:hover {
+  background: oklch(0.398 0.07 227.392); /* Darker blue on hover */
+}
+
+/* Logout button in sidebar */
+.sidebar-logout {
+  padding: 12px 16px;
+  background: #499674; 
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  margin: 20px;
+  text-align: center;
+}
+
+.sidebar-logout:hover {
+  background: oklch(0.828 0.189 84.429); /* --chart-4 */
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px oklch(0.398 0.07 227.392 / 0.4);
+}
+
+.sidebar-logout:focus {
+  outline: 2px solid oklch(0.6 0.118 184.704);
+  outline-offset: 2px;
+}
+
+/* Add simple medical-themed icons via CSS (replace with real icons if needed) */
+.sidebar-link::before {
+  content: "";
+  width: 20px;
+  height: 20px;
+  margin-top: 8px;
+  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23646464"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>') no-repeat center;
+  background-size: contain;
+  opacity: 0.7;
+  transition: opacity 0.3s ease;
+}
+
+.profile-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  background-color: #ffffff;
+  border: 1px solid #d0d7de;
+  border-radius: 8px;
+  text-decoration: none;
+  color: #00509e; /* calm blue for medical tone */
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+}
+
+.profile-link:hover {
+  background-color: #e6f0ff;
+  border-color: #b3d1ff;
+  color: #003366;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0, 80, 158, 0.15);
+}
+
+.profile-link span {
+  line-height: 1;
+}
+
+.profile-link:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 6px rgba(0, 80, 158, 0.1);
+}
+
+.sidebar-link:hover::before {
+  opacity: 1;
+}
+
+.sidebar-link.active::before {
+  filter: brightness(0) invert(1);
+}
+
+.sidebar-link:nth-child(1)::before { /* Dashboard */
+  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23646464"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>');
+}
+.sidebar-link:nth-child(2)::before { /* Users/Patients */
+  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23646464"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>');
+}
+.sidebar-link:nth-child(3)::before { /* Appointments */
+  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23646464"><path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.1 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zM9 14H7v-2h2v2zm4 0h-2v-2h2v2zm4 0h-2v-2h2v2z"/></svg>');
+}
+.sidebar-link:nth-child(4)::before { /* Prescriptions/Documents */
+  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23646464"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>');
+}
+
+
+/* ---------------------
+   Responsive
+   --------------------- */
+@media (max-width: 900px) {
+  .sidebar {
+    width: 100%;
+    height: auto;
+    flex-direction: row;
+    overflow-x: auto;
+    border-right: none;
+    border-bottom: 1px solid #e0e0e0;
+  }
+
+  .sidebar-nav {
+    flex-direction: row;
+    gap: 8px;
+    padding: 10px;
+  }
+
+  .sidebar-link {
+    padding: 8px 12px;
+    white-space: nowrap;
+    font-size: 0.9rem;
+    flex-direction: row; /* Switch to horizontal on mobile */
+    align-items: center;
+  }
+
+  .sidebar-link::before {
+    display: none; /* Hide icons on mobile for space */
+  }
+
+  .sidebar-logout {
+    margin: 10px;
+    padding: 8px 12px;
+    font-size: 0.9rem;
+  }
+}
+
+/* Accessibility and focus */
+.sidebar-link:focus {
+  outline: 2px solid oklch(0.6 0.118 184.704); /* --chart-2 */
+  outline-offset: 2px;
+}
+
+/* ---------------------
+   Main area
+   --------------------- */
+.dashboard-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.3s ease;
+}
+
+/* Header */
+.dashboard-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 24px;
+  background: #ffffff;
+  border-bottom: 1px solid #e0e0e0;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.dashboard-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: oklch(0.6 0.118 184.704); /* --chart-2 */
+  letter-spacing: 0.5px;
+}
+
+.dashboard-user {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-weight: 500;
+  color: #333;
+}
+
+/* Main content */
+.dashboard-content {
+  flex: 1;
+  padding: 30px;
+  overflow-y: auto;
+  background: #f5f8fa;
+  transition: all 0.3s ease;
+  border-radius: 0 12px 0 0;
+}
+
+/* Footer */
+.dashboard-footer {
+  padding: 16px 24px;
+  background: #ffffff;
+  border-top: 1px solid #e0e0e0;
+  text-align: center;
+  font-size: 0.9rem;
+  color: #666;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.dashboard-footer p {
+  margin: 0;
+  color: oklch(0.769 0.188 70.08); /* --chart-5 for subtle accent */
+}
+
+/* ---------------------
+   Smooth card effect for children inside dashboard-content
+   --------------------- */
+.dashboard-content > * {
+  background: #ffffff;
+  padding: 24px;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  margin-bottom: 20px;
+  transition: all 0.3s ease;
+}
+
+.dashboard-content > *:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+}
+
+/* ---------------------
+   Responsive
+   --------------------- */
+@media (max-width: 900px) {
+  .dashboard-wrapper {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    height: auto;
+    flex-direction: row;
+    overflow-x: auto;
+    border-right: none;
+    border-bottom: 1px solid #e0e0e0;
+  }
+
+  .sidebar-nav {
+    flex-direction: row;
+    gap: 8px;
+    padding: 10px;
+  }
+
+  .sidebar-link {
+    padding: 8px 12px;
+    white-space: nowrap;
+    font-size: 0.9rem;
+  }
+
+  .sidebar-link::before {
+    display: none; /* Hide icons on mobile for space */
+  }
+
+  .sidebar-logout {
+    margin: 10px;
+    padding: 8px 12px;
+    font-size: 0.9rem;
+  }
+
+  .dashboard-header {
+    padding: 12px 16px;
+  }
+
+  .dashboard-content {
+    padding: 20px;
+  }
+
+  .dashboard-footer {
+    padding: 12px 16px;
+  }
+}
+
+/* Accessibility and focus */
+.sidebar-link:focus {
+  outline: 2px solid oklch(0.6 0.118 184.704); /* --chart-2 */
+  outline-offset: 2px;
+}
