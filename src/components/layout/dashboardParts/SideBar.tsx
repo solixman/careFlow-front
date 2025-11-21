@@ -3,29 +3,26 @@ import "../../css/dashboard.css";
 
 interface SidebarProps {
   role: string;
-  onSelectComponent: (key: string) => void; // Now takes a string key
+  onSelectComponent: (key: string) => void;
 }
-
 const Sidebar: React.FC<SidebarProps> = ({ role, onSelectComponent }) => {
-  // Define menu items with keys (not components)
-  const menuByRole: Record<string, { name: string; key: string }[]> = {
+
+    const menuByRole: Record<string, { name: string; key: string }[]> = {
     admin: [
       { name: "Dashboard", key: "dashboard" },
       { name: "Users", key: "users" },
-      { name: "Patients", key: "patients" },
       { name: "Appointments", key: "appointments" },
+      { name: "Consultations", key: "consultations" },
     ],
     doctor: [
       { name: "Dashboard", key: "dashboard" },
-      { name: "Patients", key: "patients" },
       { name: "Appointments", key: "appointments" },
-      { name: "Prescriptions", key: "prescriptions" },
+      { name: "Consultations", key: "consultations" },
     ],
     patient: [
       { name: "Dashboard", key: "dashboard" },
       { name: "Appointments", key: "appointments" },
-      { name: "Prescriptions", key: "prescriptions" },
-      { name: "Documents", key: "documents" },
+      { name: "Consultations", key: "consultations" },  
     ],
   };
 
